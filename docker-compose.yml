@@ -1,0 +1,21 @@
+services:
+  embed-service:
+    build: .
+    image: nameai-embed-service:latest
+    container_name: nameai-embed-service
+    ports:
+      - "8000:8000"          # bind to 127.0.0.1:8000 on the VM if fronted by a reverse proxy
+    environment:
+      - EMBED_SERVICE_API_KEY=${EMBED_SERVICE_API_KEY:-}
+      - EMBED_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - RERANK_MODEL=BAAI/bge-reranker-base
+      - EMBED_NORMALIZE=false
+      - RERANK_SIGMOID=true
+      - OMP_NUM_THREADS=4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:8000/health').status==200 else sys.exit(1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s

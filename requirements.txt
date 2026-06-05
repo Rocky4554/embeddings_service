@@ -1,0 +1,9 @@
+# Web
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.8.2
+
+# ML — torch (CPU) is installed separately in the Dockerfile from the CPU wheel
+# index so we don't pull the multi-GB CUDA build.
+sentence-transformers==3.0.1
+numpy==1.26.4
